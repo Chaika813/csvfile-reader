@@ -1,23 +1,19 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import FileReader from './FileReader';
+import Table from './Table';
+import Error from './Error';
 import './App.css';
 
 function App() {
+  const [tableData, setTableData] = useState([]);
+  const [isCSVFileValid, setIsCSVFileValid] = useState(true);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+      <FileReader setTableData={setTableData} setIsCSVFileValid={setIsCSVFileValid} />
+      {isCSVFileValid ? <Table data={tableData} setTableData={setTableData} /> : <Error/>}
+      </div>
     </div>
   );
 }
