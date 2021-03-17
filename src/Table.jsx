@@ -12,7 +12,6 @@ function Table(props) {
 
     useEffect(() => {
         validateData();
-        checkForDuplicates();
     }, [props.data])
 
     const validateData = () => {
@@ -28,21 +27,6 @@ function Table(props) {
             })
         })
     }
-
-    const checkForDuplicates = () => {
-       props.data.map(row => {
-            const email = row['Email'].toLowerCase()
-            const phone = row['Phone'].toLowerCase()
-            const duplicate = props.data.find(f => (f['Email'].toLowerCase() === email
-                || f['Phone'].toLowerCase() === phone) && f.id !== row.id)
-                
-            if (duplicate) {
-                row['Duplicate with'] = duplicate.id
-            }
-        })
-        props.setTableData(props.data);
-    }
-
     return (
         <div>
             <table className="table">

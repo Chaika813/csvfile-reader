@@ -4,4 +4,5 @@
 
 .table {
     margin-top: 3em;
+    width: max-content;
 }

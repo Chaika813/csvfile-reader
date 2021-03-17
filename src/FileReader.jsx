@@ -21,10 +21,11 @@ function FileReader(props) {
                     skipEmptyLines: true,
                     header: true,
                     transform: function (v, k) {
-                        phoneNumberFormat(v, k);
-                        hasChildrenFormat(v, k);
-                        statesFormat(v, k)
-                        return v.trim();
+                        v = v.trim();
+                        v = phoneNumberFormat(v, k);
+                        v = hasChildrenFormat(v, k);
+                        v = statesFormat(v, k);
+                        return v;
                     }
                 });
             } else props.setIsCSVFileValid(false)
@@ -33,7 +34,6 @@ function FileReader(props) {
 
     const phoneNumberFormat = (v, k) => {
         if (k === 'Phone') {
-            v = v.trim();
             const firstFormat = /^\d{10}$/;
             const secondFormat = /^\+1\d{10}$/;
             const thirdFormat = /^1\d{10}$/;
@@ -45,67 +45,84 @@ function FileReader(props) {
                 return `+${v}`;
             }
         }
+        return v;
     }
 
     const hasChildrenFormat = (v, k) => {
-        if (k = 'Has children') {
-            v = v.trim();
+        if (k === 'Has children') {
             if (v === "") {
                 return v = 'FALSE'
             }
         }
+        return v;
     }
 
     const statesFormat = (v, k) => {
-        if (k = 'License states') {
-            v.trim();
+        if (k === 'License states') {
             const keys = Object.keys(states);
-            const splitedValue = v.split(/,| /);
-            splitedValue.map(v=> {
-                if ( keys.includes(v)) {
-                   return v = keys.v
-                }
-            })
+            const splitedValue = v.split(/, |,/);
+            return splitedValue.map(v => {
+                let vLow = v.toLowerCase();
+                if (keys.includes(vLow)) {
+                    let abb = states[vLow];
+                    return v = abb;
+                } else return v.toUpperCase();
+            }).join('|');
         }
+        return v;
     }
 
     const updateData = (result) => {
         let data = result.data;
-        requireHeader(data)
-        data = data.map((x, idx) => {
-            x['id'] = idx + 1;
-            x['Duplicate with'] = null;
-            return x;
-        })
-
-        props.setTableData(data);
-        console.log(`Finished: `, data);
+        requiredHeader(data);
+        if (props.isCSVFileValid) {
+            data = data.map((x, idx) => {
+                x['id'] = idx + 1;
+                x['Duplicate with'] = null;
+                return x;
+            })
+            checkForDuplicates(data);
+            props.setTableData(data);
+            console.log(`Finished: `, data);
+        }
     }
 
-    const requireHeader = (data) => {
-        debugger
-        let keys = Object.keys(data);
-        let lowerCaseKey = keys.map(k => {
-            k.toLowerCase();
+    const checkForDuplicates = (data) => {
+        
+        data.map(row => {
+            const email = row['Email'].toLowerCase()
+            const phone = row['Phone'].toLowerCase()
+            const duplicate = data.find(f => (f['Email'].toLowerCase() === email
+                || f['Phone'].toLowerCase() === phone) && f.id !== row.id)
+
+            if (duplicate) {
+                row['Duplicate with'] = duplicate.id
+            }
         })
+    }
+
+    const requiredHeader = (data) => {
+         
+        let keys = Object.keys(data[0]);
+        let lowerCaseKey = keys.map(k => k.toLowerCase())
         if (!lowerCaseKey.includes('full name') || !lowerCaseKey.includes('phone') || !lowerCaseKey.includes('email')) {
-            props.setIsCSVFileValid(false);
+           props.setIsCSVFileValid(false);
+           return false;
         }
     }
 
 
     return (
         <div className="container">
-            <h2>Import CSV File!</h2>
+            <h2>Import Users</h2>
             <input
                 className="csv-input"
                 type="file"
                 name="csvfile"
-                // accept=".csv"
                 onChange={handleChange}
             />
             <p />
-            <button onClick={importCSV}> Upload now!</button>
+            <button className='btn btn-primary' onClick={importCSV}> Upload now</button>
         </div>
     );
 }

@@ -7,8 +7,6 @@ function getValidator(type) {
     switch (type) {
         case 'Age':
             return ageValidator;
-        // case 'Full name' && 'Phone':
-        //     return checkForDuplicates;
         case 'Experience':
             return experienceValidator;
         case 'Yearly Income':
@@ -81,6 +79,6 @@ function licenseValidator(data) {
 }
 
 function licenseStatesValidator(data) {
-    
+    return data['License states'].match(/[A-Z]{2}\||[A-Z]{2}/);
 }
 export default getValidator;

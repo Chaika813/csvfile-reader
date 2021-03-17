@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <div className="container">
-      <FileReader setTableData={setTableData} setIsCSVFileValid={setIsCSVFileValid} />
+      <FileReader setTableData={setTableData} isCSVFileValid={isCSVFileValid} setIsCSVFileValid={setIsCSVFileValid} />
       {isCSVFileValid ? <Table data={tableData} setTableData={setTableData} /> : <Error/>}
       </div>
     </div>
