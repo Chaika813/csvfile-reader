@@ -17,7 +17,7 @@ function Table(props) {
     const validateData = () => {
         props.data.map((row, index) => {
             const keys = getKeys();
-            keys.map((key) => {
+            return keys.map((key) => {
                 const validator = getValidator(key);
                 if (validator) {
                     if (!validator(row)) {
@@ -28,8 +28,8 @@ function Table(props) {
         })
     }
     return (
-        <div>
-            <table className="table">
+        <div className='d-flex justify-content-center'>
+            <table className="table small">
                 <thead className="thead-dark">
                     <tr>
                         <th scope="col">Id</th>
@@ -59,7 +59,6 @@ function Table(props) {
 }
 
 const RenderRow = (props) => {
-    
     return props.keys.map((key) => {
         return <td key={key + '-' + props.idx} id={key + '-' + props.idx}>{props.data[key]}</td>
     })

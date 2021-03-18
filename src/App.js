@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import FileReader from './FileReader';
-import Table from './Table';
-import Error from './Error';
+import FileReader from './app/FileReader';
+import Table from './app/Table';
+import Error from './app/Error';
 import './App.css';
 
 function App() {
@@ -10,10 +10,8 @@ function App() {
 
   return (
     <div className="App">
-      <div className="container">
       <FileReader setTableData={setTableData} isCSVFileValid={isCSVFileValid} setIsCSVFileValid={setIsCSVFileValid} />
       {isCSVFileValid ? <Table data={tableData} setTableData={setTableData} /> : <Error/>}
-      </div>
     </div>
   );
 }

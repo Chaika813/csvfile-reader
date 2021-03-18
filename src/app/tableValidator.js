@@ -1,9 +1,6 @@
 import moment from "moment";
-import { Children } from "react";
 
 function getValidator(type) {
-
-
     switch (type) {
         case 'Age':
             return ageValidator;
@@ -21,6 +18,8 @@ function getValidator(type) {
             return licenseValidator;
         case 'License states':
             return licenseStatesValidator;
+        default:
+            return null
     }
 }
 
@@ -75,7 +74,7 @@ function childrenValidator(data) {
 }
 
 function licenseValidator(data) {
-    return data['License number'].length == 6;
+    return data['License number'].length === 6;
 }
 
 function licenseStatesValidator(data) {

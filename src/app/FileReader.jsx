@@ -7,7 +7,6 @@ function FileReader(props) {
 
     const [csvfile, setCSVFile] = useState();
 
-
     const handleChange = event => {
         setCSVFile(event.target.files[0])
     };
@@ -63,6 +62,7 @@ function FileReader(props) {
             const splitedValue = v.split(/, |,/);
             return splitedValue.map(v => {
                 let vLow = v.toLowerCase();
+
                 if (keys.includes(vLow)) {
                     let abb = states[vLow];
                     return v = abb;
@@ -74,7 +74,9 @@ function FileReader(props) {
 
     const updateData = (result) => {
         let data = result.data;
-        requiredHeader(data);
+        if (!isFileHederValid(data)) {
+            return;
+        }
         if (props.isCSVFileValid) {
             data = data.map((x, idx) => {
                 x['id'] = idx + 1;
@@ -87,8 +89,8 @@ function FileReader(props) {
         }
     }
 
+
     const checkForDuplicates = (data) => {
-        
         data.map(row => {
             const email = row['Email'].toLowerCase()
             const phone = row['Phone'].toLowerCase()
@@ -101,16 +103,16 @@ function FileReader(props) {
         })
     }
 
-    const requiredHeader = (data) => {
-         
+    const isFileHederValid = (data) => {
         let keys = Object.keys(data[0]);
         let lowerCaseKey = keys.map(k => k.toLowerCase())
         if (!lowerCaseKey.includes('full name') || !lowerCaseKey.includes('phone') || !lowerCaseKey.includes('email')) {
-           props.setIsCSVFileValid(false);
-           return false;
+            props.setIsCSVFileValid(false);
+            return false;
         }
-    }
 
+        return true;
+    }
 
     return (
         <div className="container">
